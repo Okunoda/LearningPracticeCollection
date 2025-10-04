@@ -32,7 +32,8 @@ public class OrderServiceImpl implements OrderService {
     public Order createOrder(Long id, Long userId) {
         Order order = new Order();
 //        Product product = getProductFromRemote(id);
-        Product product = getProductFromRemoteWithLoadBalance(id);
+//        Product product = getProductFromRemoteWithLoadBalance(id);
+        Product product = getProductFromRemoteWithLoadBalanceAnnotation(id);
 
         order.setId(1L);
         order.setUserId(userId);
@@ -42,6 +43,15 @@ public class OrderServiceImpl implements OrderService {
 
         order.setProducts(Lists.newArrayList(product));
         return order;
+    }
+
+    //v2-使用 loadBalance 负载均衡 注解获取地址。注解加在restTemplate 的 Bean 上
+    private Product getProductFromRemoteWithLoadBalanceAnnotation(Long id) {
+        String url = "http://service-product/getProduct/" + id;
+        ResponseEntity<Product> response = restTemplate.getForEntity(url, Product.class);
+
+        Product body = response.getBody();
+        return body;
     }
 
 
