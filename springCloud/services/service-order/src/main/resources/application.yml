@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: service-order
+  cloud:
+    nacos:
+      config:
+        server-addr: 172.25.74.102:8848
+      discovery:
+        server-addr: 172.25.74.102:8848
+  config:
+    import: "nacos:service-order.yml"
+
+
+server:
+  port: 8080
+

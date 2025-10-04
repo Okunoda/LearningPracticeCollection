@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: service-product
+  cloud:
+    nacos:
+      config:
+        server-addr: 172.25.74.102:8848
+      discovery:
+        server-addr: 172.25.74.102:8848
+  config:
+    import: "nacos:service-product.yml"
+
+
+server:
+  port: 9091
+

@@ -11,9 +11,22 @@ applogs/
 
 ### IntelliJ IDEA ###
 .idea
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
 *.iws
 *.iml
 *.ipr
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
 ### NetBeans ###
 /nbproject/private/
@@ -30,3 +43,7 @@ build/
 package/
 package.zip
 *.DS_Store
+
+### Mac OS ###
+.DS_Store
+/.idea/
