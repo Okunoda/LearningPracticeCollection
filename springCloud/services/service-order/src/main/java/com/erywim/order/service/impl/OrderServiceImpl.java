@@ -1,6 +1,7 @@
 package com.erywim.order.service.impl;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.nacos.shaded.com.google.common.collect.Lists;
 import com.erywim.order.bean.Order;
 import com.erywim.order.feign.ProductFeignClient;
@@ -32,7 +33,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductFeignClient productFeignClient;
 
-    @SentinelResource("createOrder")
+    @SentinelResource(value = "createOrder",// sentinelResource 通常标注再非controller层的方法上。
+    blockHandler = "createOrderBlockHandler"//其中 blockHandler 用于处理限流、降级的保护策略方法，并且blockHandler指定的方法必须是public方法。blockHandler 是由 Sentinel 框架在方法外部、代理层直接反射调用；反射要能够访问到目标方法，必须满足 Java 访问权限检查，因此要求 public。
+    ,fallback = "createOrderFallbackHandler")//fallback用于处理资源代码执行中发生异常时的策略方法，fallBack指定的方法可以是private方法。是由 Sentinel 在原方法抛出异常后，通过同一线程栈里的普通方法调用链进入；
     @Override
     public Order createOrder(Long id, Long userId) {
         Order order = new Order();
@@ -48,6 +51,30 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(product.getPrice().multiply(new BigDecimal(product.getNum())));
 
         order.setProducts(Lists.newArrayList(product));
+        return order;
+    }
+
+    public Order createOrderBlockHandler(Long id, Long userId, BlockException e) {
+        log.error("限流降级保护策略方法被调用");
+        Order order = new Order();
+        order.setId(1L);
+        order.setUserId(userId);
+        order.setNickName("未知用户");
+        order.setAddress("限流保护策略方法调用");
+        order.setTotalAmount(new BigDecimal(0));
+        order.setProducts(Lists.newArrayList());
+        return order;
+    }
+
+    private Order createOrderFallbackHandler(Long id, Long userId) {
+        log.error("资源代码执行中发生异常");
+        Order order = new Order();
+        order.setId(1L);
+        order.setUserId(userId);
+        order.setNickName("未知用户");
+        order.setAddress("资源代码执行中发生异常" );
+        order.setTotalAmount(new BigDecimal(0));
+        order.setProducts(Lists.newArrayList());
         return order;
     }
 
