@@ -5,6 +5,8 @@ spring:
     nacos:
       config:
         server-addr: 172.25.74.102:8848
+        import-check:
+          enabled: false #如果项目中引入了 nacos-config-spring-boot-starter，但是没有实际用上配置中心的功能，则需要禁用检查，否则会报异常。要不就是在下面导入 nacos:*** 配置文件
       discovery:
         server-addr: 172.25.74.102:8848
   config:
