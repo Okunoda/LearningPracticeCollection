@@ -1,6 +1,7 @@
 package com.erywim.order.controller;
 
 import com.erywim.order.bean.Order;
+import com.erywim.order.config.OrderProperties;
 import com.erywim.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,19 +11,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RefreshScope //设置自动刷新，当配置中心内容改变时，会自动更新
+//@RefreshScope //设置自动刷新，当配置中心内容改变时，会自动更新
 public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @Value("${order.timeout}")
-    private String timeout;
-    @Value("${order.auto-confirm}")
-    private String autoConfirm;
+//    @Value("${order.timeout}")
+//    private String timeout;
+//    @Value("${order.auto-confirm}")
+//    private String autoConfirm;
+
+    @Autowired
+    private OrderProperties orderProperties;
 
     @GetMapping("config")
     public String getConfig() {
-        return "timeout:" + timeout + " autoConfirm:" + autoConfirm;
+        return "timeout:" + orderProperties.getTimeout() + " autoConfirm:" + orderProperties.getAutoConfirm();
     }
 
     @GetMapping("/createOrder")
