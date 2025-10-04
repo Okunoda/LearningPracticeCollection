@@ -1,5 +1,6 @@
 package com.erywim.order.service.impl;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.nacos.shaded.com.google.common.collect.Lists;
 import com.erywim.order.bean.Order;
 import com.erywim.order.feign.ProductFeignClient;
@@ -31,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductFeignClient productFeignClient;
 
+    @SentinelResource("createOrder")
     @Override
     public Order createOrder(Long id, Long userId) {
         Order order = new Order();

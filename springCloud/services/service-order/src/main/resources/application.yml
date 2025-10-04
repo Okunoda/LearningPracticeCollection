@@ -10,6 +10,10 @@ spring:
         namespace: public # 命名空间，每个环境创建一个命名空间
       discovery:
         server-addr: 172.25.74.102:8848
+    sentinel:
+      transport:
+        dashboard: 172.25.74.102:8718
+      eager: true # sentinel 默认懒加载，只有第一次访问时才会加载，这里设置 eager 为 true，则 eagerly 启动，即在启动时就加载
 
 
   config:
