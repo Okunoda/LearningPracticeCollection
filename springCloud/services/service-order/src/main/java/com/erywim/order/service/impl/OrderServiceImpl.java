@@ -2,6 +2,7 @@ package com.erywim.order.service.impl;
 
 import com.alibaba.nacos.shaded.com.google.common.collect.Lists;
 import com.erywim.order.bean.Order;
+import com.erywim.order.feign.ProductFeignClient;
 import com.erywim.order.service.OrderService;
 import com.erywim.product.bean.Product;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +28,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private LoadBalancerClient loadBalancerClient;
+    @Autowired
+    private ProductFeignClient productFeignClient;
 
     @Override
     public Order createOrder(Long id, Long userId) {
         Order order = new Order();
 //        Product product = getProductFromRemote(id);
 //        Product product = getProductFromRemoteWithLoadBalance(id);
-        Product product = getProductFromRemoteWithLoadBalanceAnnotation(id);
+//        Product product = getProductFromRemoteWithLoadBalanceAnnotation(id);
+        Product product = productFeignClient.getProductById(id);
 
         order.setId(1L);
         order.setUserId(userId);
