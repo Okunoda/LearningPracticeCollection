@@ -2,6 +2,7 @@ package com.erywim.product.controller;
 
 import com.erywim.product.bean.Product;
 import com.erywim.product.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +17,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/getProduct/{id}")
-    public Product getProduct(@PathVariable Long id) {
-        log.info("收到获取商品的请求");
+    public Product getProduct(@PathVariable Long id, HttpServletRequest request) {
+        log.info("收到获取商品的请求，token为：{}",request.getHeader("X-Token"));
 
         return productService.getProduct(id);
     }
