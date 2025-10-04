@@ -13,6 +13,6 @@ public class WeatherTest {
 
     @Test
     public void test() {
-        System.out.println(weatherFeignClient.getWeather("123123", "123123", 1L));
+        System.out.println(weatherFeignClient.getWeather("bbbbbbbb", "jjjjjjjjj", 1L));
     }
 }

@@ -21,3 +21,7 @@ order:
 server:
   port: 8080
 
+logging:
+  level:
+    com.erywim.order: debug
+
