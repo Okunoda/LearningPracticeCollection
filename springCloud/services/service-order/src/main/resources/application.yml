@@ -15,9 +15,10 @@ spring:
     import:
       - "nacos:service-order.yml" #和配置中心的 DataId 一致。用 ',' 分割，存在相同配置内容时先导入的优先
       - "nacos:common.yml?group=order" #根据group可以导入不同组别的配置文件
+  profiles:
+    include: feign
 order:
   timeout: 5000 # 配置中心和项目中存在相同的配置，加载规则依据：先导入优先和外部优先。先导入指的是配置中心导入多个配置文件，先加载的优先。外部优先指的是配置中心优先于项目本身
-
 server:
   port: 8080
 

@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          default: #如果服务没有做相关配置，那么就用这个默认配置
+            connect-timeout: 2000
+            read-timeout: 1000
+          service-product: # 如果服务做了配置，那么就用精确的这个配置
+            connect-timeout: 1000
+            read-timeout: 1000
+#            retryer: feign.Retryer.NEVER_RETRY # 指定重试器的全类名。或者不在这配置，直接往容器中放一个 Retry Bean 也可以被应用到。具体详见官方文档
