@@ -11,6 +11,7 @@ spring:
       discovery:
         server-addr: 172.25.74.102:8848
 
+
   config:
     import:
       - "nacos:service-order.yml" #和配置中心的 DataId 一致。用 ',' 分割，存在相同配置内容时先导入的优先
@@ -25,4 +26,6 @@ server:
 logging:
   level:
     com.erywim.order: debug
-
+feign:
+  sentinel: #配合sentinel，feign回调机制才会生效
+    enabled: true
