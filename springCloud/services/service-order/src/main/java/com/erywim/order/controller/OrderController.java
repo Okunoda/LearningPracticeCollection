@@ -26,7 +26,7 @@ public class OrderController {
 
     @GetMapping("config")
     public String getConfig() {
-        return "timeout:" + orderProperties.getTimeout() + " autoConfirm:" + orderProperties.getAutoConfirm();
+        return "timeout:" + orderProperties.getTimeout() + " autoConfirm:" + orderProperties.getAutoConfirm() + ":" + orderProperties.getTest();
     }
 
     @GetMapping("/createOrder")

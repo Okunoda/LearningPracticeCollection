@@ -10,4 +10,5 @@ import org.springframework.context.annotation.Configuration;
 public class OrderProperties {
     private String timeout;
     private String autoConfirm;
+    private String test;
 }
