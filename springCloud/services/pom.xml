@@ -17,6 +17,11 @@
     <artifactId>services</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.erywim</groupId>
+            <artifactId>model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <!--    配置中心    -->
         <dependency>

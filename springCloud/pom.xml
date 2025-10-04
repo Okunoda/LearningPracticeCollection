@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>services</module>
+        <module>model</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
