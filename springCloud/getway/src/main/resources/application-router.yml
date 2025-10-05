@@ -8,6 +8,10 @@ spring:
             - Path=/api/order/**
         - id: server-product
           uri: lb://service-product
-          predicates:
-            - Path=/api/product/**
+          predicates: # 上面是简写，这里是全写法
+            name: Path # 这里指定需要用到哪个断言工厂，比如这写Path，即用 PathRoutePredicateFactory 这个断言工厂。查找的话除了官方文档，还可以看 RoutePredicateFactory 接口的实现类有哪些
+            args: # 不同的断言工厂需要的参数不一样
+              pattern: /api/product/**
+              matchTrailingSlash: true
+
           order: 0 # 数字越小优先级越高
