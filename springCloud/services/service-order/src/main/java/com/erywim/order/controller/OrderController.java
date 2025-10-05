@@ -35,8 +35,18 @@ public class OrderController {
         return orderService.createOrder(id, userId);
     }
 
-    @GetMapping("seckill")
+    @GetMapping("seckill") // 在sentinel中给 orderService.createOrder 方法设置为 链路 类型的流控，限制入口为 /seckill ，也就是从createOrder接口调用这个方法不会被限制，从seckill方法就被流控
     public Order seckill() {
         return orderService.createOrder(Long.MAX_VALUE,Long.MAX_VALUE);
+    }
+
+    @GetMapping("readDb")
+    public String readDb() { //读取在sentinel中被设置为 关联 类型的流控，关联 writeDb 接口，也就是当 writeDb 流量特别大的时候，会优先限制 readDb 的访问去保证 writeDb 的正常访问。
+        return "read DB success........";
+    }
+
+    @GetMapping("writeDb")
+    public String writeDb() {
+        return "write DB success........";
     }
 }
