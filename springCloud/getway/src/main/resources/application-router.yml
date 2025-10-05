@@ -29,4 +29,6 @@ spring:
               args:
                 param: user
                 value: erywim
+      default-filters: # 默认filter
+        - AddResponseHeader=X-Response-My-test, Test-Content
 
