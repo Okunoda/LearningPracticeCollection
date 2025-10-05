@@ -24,4 +24,9 @@ spring:
               args:
                 param: q
                 regexp: haha  # 写到这里的意思是 只有当访问 /search 并且附带 q 参数，并且 q 参数的值满足正则表达式 haha 的时候，才会匹配这个路由规则。然后跳转到bing，并且附带路径和q参数
+            - Vip=user,erywim # 自定义 Vip 断言工厂。简写法
+            - name: Vip
+              args:
+                param: user
+                value: erywim
 
