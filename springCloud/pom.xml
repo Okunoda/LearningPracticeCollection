@@ -11,6 +11,7 @@
     <modules>
         <module>services</module>
         <module>model</module>
+        <module>getway</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

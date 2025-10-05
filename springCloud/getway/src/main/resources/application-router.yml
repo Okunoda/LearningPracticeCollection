@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: server-order-gateway # 当前这个路由规则的名称
+          uri: lb://service-order # 拦截的请求需要转发的目标uri 。lb 为交给 loadBalance 进行负载均衡。当然也可以写 http://www.baidu.com
+          predicates:             # 断言匹配，匹配到则进入
+            - Path=/api/order/**
+        - id: server-product
+          uri: lb://service-product
+          predicates:
+            - Path=/api/product/**
+          order: 0 # 数字越小优先级越高
