@@ -9,9 +9,19 @@ spring:
         - id: server-product
           uri: lb://service-product
           predicates: # 上面是简写，这里是全写法
-            name: Path # 这里指定需要用到哪个断言工厂，比如这写Path，即用 PathRoutePredicateFactory 这个断言工厂。查找的话除了官方文档，还可以看 RoutePredicateFactory 接口的实现类有哪些
-            args: # 不同的断言工厂需要的参数不一样
-              pattern: /api/product/**
-              matchTrailingSlash: true
-
+            - name: Path # 这里指定需要用到哪个断言工厂，比如这写Path，即用 PathRoutePredicateFactory 这个断言工厂。查找的话除了官方文档，还可以看 RoutePredicateFactory 接口的实现类有哪些
+              args: # 不同的断言工厂需要的参数不一样
+                patterns: /api/product/**
+                matchTrailingSlash: true
           order: 0 # 数字越小优先级越高
+        - id: bing-search
+          uri: https://cn.bing.com
+          predicates:
+            - name: Path
+              args:
+                patterns: /search
+            - name: Query
+              args:
+                param: q
+                regexp: haha  # 写到这里的意思是 只有当访问 /search 并且附带 q 参数，并且 q 参数的值满足正则表达式 haha 的时候，才会匹配这个路由规则。然后跳转到bing，并且附带路径和q参数
+
