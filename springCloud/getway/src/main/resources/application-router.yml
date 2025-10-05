@@ -1,6 +1,17 @@
 spring:
   cloud:
     gateway:
+      # 允许所有请求跨域
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns:
+              - '*'
+            allowed-headers:
+              - '*'
+            allowed-methods:
+              - '*'
+
       routes:
         - id: server-order-gateway # 当前这个路由规则的名称
           uri: lb://service-order # 拦截的请求需要转发的目标uri 。lb 为交给 loadBalance 进行负载均衡。当然也可以写 http://www.baidu.com
