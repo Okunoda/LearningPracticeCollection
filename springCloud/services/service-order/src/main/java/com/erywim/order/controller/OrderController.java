@@ -34,4 +34,9 @@ public class OrderController {
                              @RequestParam("userId")Long userId) {
         return orderService.createOrder(id, userId);
     }
+
+    @GetMapping("seckill")
+    public Order seckill() {
+        return orderService.createOrder(Long.MAX_VALUE,Long.MAX_VALUE);
+    }
 }

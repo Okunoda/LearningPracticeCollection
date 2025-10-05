@@ -14,6 +14,7 @@ spring:
       transport:
         dashboard: 172.25.74.102:8718
       eager: true # sentinel 默认懒加载，只有第一次访问时才会加载，这里设置 eager 为 true，则 eagerly 启动，即在启动时就加载
+      web-context-unify: false # 开启的话所有 Web 请求会被归为一个统一的上下文，链路追踪（trace）会丢失入口信息，即你无法区分请求是从 /createOrder 还是 /seckill 进来的。
 
 
   config:
