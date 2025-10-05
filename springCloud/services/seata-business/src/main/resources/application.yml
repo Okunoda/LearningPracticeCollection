@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: seata-business
+  cloud:
+    nacos:
+      server-addr: 172.25.74.102:8848
+      config:
+        import-check:
+          enabled: false
+server:
+  port: 11000
+
