@@ -4,6 +4,7 @@ import com.atguigu.order.bean.OrderTbl;
 import com.atguigu.order.feign.AccountFeignClient;
 import com.atguigu.order.mapper.OrderTblMapper;
 import com.atguigu.order.service.OrderService;
+import org.apache.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private AccountFeignClient accountFeignClient;
+
+    @GlobalTransactional //引入seata之后，只需要在最大的方法加上@GlobalTransactional注解即可
     @Override
     public OrderTbl create(String userId, String commodityCode, int orderCount) {
         //1、计算订单价格
