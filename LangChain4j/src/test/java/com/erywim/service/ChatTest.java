@@ -125,6 +125,11 @@ public class ChatTest {
         countDownLatch.await();
         System.out.println("metadataHolder.get() = " + metadataHolder.get());
     }
+    /*
+    todo
+     1. 结构化输出
+     2. 模型切换
+     */
 
     @Test
     public void testMemory(){

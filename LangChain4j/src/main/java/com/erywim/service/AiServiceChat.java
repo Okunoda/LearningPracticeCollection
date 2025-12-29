@@ -21,5 +21,6 @@ import javax.xml.transform.stream.StreamResult;
 public interface AiServiceChat extends ChatMemoryAccess {
     Flux<String> chat(@UserMessage String question);
 
+    Flux<String> chatWithMemory(@UserMessage String question, @MemoryId Long memoryId);
 
 }

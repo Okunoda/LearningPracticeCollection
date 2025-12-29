@@ -1,4 +1,4 @@
-package com.erywim;
+package com.erywim.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
