@@ -11,9 +11,8 @@ public interface ChatMemoryDao {
 
     ChatMessage queryById(Object o);
 
-    List<ChatMessage> queryByUserId(Object o);
+    List<ChatMemory> queryByUserId(Object o);
 
-    void updateByUserId(@Param("id") Object o, @Param("chatMemoryList") List<ChatMemory> list);
 
     void deletaByUserId(Object o);
 

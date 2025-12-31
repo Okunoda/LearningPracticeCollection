@@ -48,11 +48,27 @@ public class ChatWithSpringTest {
                 .chatMemoryProvider(chatMemoryProvider)
                 .build();
 
-        service.chatWithMemory("你好，你谁", 1L)
+        service.chatWithMemory("我是小A", 1L)
                 .doOnSubscribe((subscription) -> System.out.println(subscription + " 开始订阅"))
-                .doOnNext(System.out::println)
+                .doOnNext(System.out::print)
                 .doOnComplete(() -> {
-                    System.out.println("完成");
+                    System.out.println("\n完成");
+//                    countDownLatch.countDown();
+                })
+                .subscribe();
+        service.chatWithMemory("我是誰",1L)
+                .doOnSubscribe((subscription) -> System.out.println(subscription + " 開始订阅"))
+                .doOnNext(System.out::print)
+                .doOnComplete(() -> {
+                    System.out.println("\n完成");
+//                    countDownLatch.countDown();
+                })
+                .subscribe();
+        service.chatWithMemory("我是誰",2L)
+                .doOnSubscribe((subscription) -> System.out.println(subscription + " 開始订阅"))
+                .doOnNext(System.out::print)
+                .doOnComplete(() -> {
+                    System.out.println("\n完成");
                     countDownLatch.countDown();
                 })
                 .subscribe();
