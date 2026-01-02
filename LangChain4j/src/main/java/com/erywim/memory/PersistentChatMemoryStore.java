@@ -42,7 +42,7 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
         //这里为了实现简单就不做saveOrUpdate了，直接删了加
         memoryDao.deletaByUserId(o);
 
-        System.out.println("message list = " + list);
+        System.out.println("message list size = " + list.size());
         List<ChatMemory> chatMemoryList = new ArrayList<>();
         for (ChatMessage chatMessage : list) {
             if (chatMessage.type() == ChatMessageType.USER) {

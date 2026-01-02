@@ -131,9 +131,6 @@ public class ChatTest {
      2. 模型切换
      */
 
-    @Test
-    public void testMemory(){
 
-    }
 
 }
