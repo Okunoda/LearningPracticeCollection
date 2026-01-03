@@ -1,24 +1,18 @@
 package com.erywim.service;
 
 import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.model.StreamingResponseHandler;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.model.openai.OpenAiChatRequestParameters;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
-import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.service.AiServices;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
-import javax.xml.transform.stream.StreamResult;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -57,7 +51,7 @@ public class ChatTest {
     @Test
     public void testChatRequestStream() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        AiServiceChat service = AiServices.builder(AiServiceChat.class)
+        AiServiceChatWithMemory service = AiServices.builder(AiServiceChatWithMemory.class)
                 .streamingChatModel(streamingModel)
                 .chatRequestTransformer((chatRequest, object) ->
                         chatRequest.toBuilder()
@@ -125,11 +119,7 @@ public class ChatTest {
         countDownLatch.await();
         System.out.println("metadataHolder.get() = " + metadataHolder.get());
     }
-    /*
-    todo
-     1. 结构化输出
-     2. 模型切换
-     */
+
 
 
 

@@ -8,7 +8,9 @@ import reactor.core.publisher.Flux;
 /**
  * @Date 2025/12/20
  */
-public interface AiServiceChat {
-    String chat(@UserMessage String question);
+public interface AiServiceChatWithMemory extends ChatMemoryAccess {
+    Flux<String> chat(@UserMessage String question);
+
+    Flux<String> chatWithMemory(@UserMessage String question, @MemoryId Long memoryId);
 
 }

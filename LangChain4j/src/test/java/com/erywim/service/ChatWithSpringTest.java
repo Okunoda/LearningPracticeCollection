@@ -1,9 +1,10 @@
 package com.erywim.service;
 
-import com.erywim.dao.ChatMemoryDao;
 import com.erywim.memory.PersistentChatMemoryStore;
+import com.erywim.tools.TimeTool;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import org.junit.Test;
@@ -12,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
 
 /**
 *
@@ -23,11 +22,6 @@ import java.util.concurrent.CyclicBarrier;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ChatWithSpringTest {
-    /*
-    todo
-    1. 记忆持久化到数据库 ———— done
-    2. rag 库使用
-     */
     @Autowired
     private PersistentChatMemoryStore memoryStore;
     @Test
@@ -45,7 +39,7 @@ public class ChatWithSpringTest {
                 .chatMemoryStore(memoryStore)
                 .build();
 
-        AiServiceChat service = AiServices.builder(AiServiceChat.class)
+        AiServiceChatWithMemory service = AiServices.builder(AiServiceChatWithMemory.class)
                 .streamingChatModel(streamingChatModel)
                 .chatMemoryProvider(chatMemoryProvider)
                 .build();
@@ -81,5 +75,21 @@ public class ChatWithSpringTest {
                 })
                 .subscribe();
         countDownLatch2.await();
+    }
+
+    @Test
+    public void testTool() throws InterruptedException {
+        OpenAiChatModel chatModel = OpenAiChatModel.builder()
+                .modelName("deepseek-chat")
+                .baseUrl("https://api.deepseek.com")
+                .apiKey(System.getenv("deepseek-key"))
+                .build();
+        AiServiceChat aiServiceChat = AiServices.builder(AiServiceChat.class)
+                .chatModel(chatModel)
+                .tools(new TimeTool())
+                .build();
+        String content = aiServiceChat.chat("北京当前时间");
+        System.out.println(content);
+
     }
 }
