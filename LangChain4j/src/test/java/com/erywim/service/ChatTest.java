@@ -1,14 +1,20 @@
 package com.erywim.service;
 
+import dev.langchain4j.data.document.Document;
+import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.output.TokenUsage;
+import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
+import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
@@ -120,6 +126,23 @@ public class ChatTest {
         System.out.println("metadataHolder.get() = " + metadataHolder.get());
     }
 
+    @Test
+    public void testEasyRag(){
+        //1. 加载文档
+        Document document = FileSystemDocumentLoader.loadDocument("src/main/resources/static/王麻子自传.txt");
+        // 2. 为文档及其嵌入创建了一个空的内存存储。
+        InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+        // 3. 将文档导入到内存存储中
+        EmbeddingStoreIngestor.ingest(document,embeddingStore);
+        // 4. 创建一个在内存存储的检索器
+        EmbeddingStoreContentRetriever embeddingRetriever = EmbeddingStoreContentRetriever.from(embeddingStore);
+        //5. 给对话提供检索能力
+        String result = AiServices.builder(AiServiceChat.class)
+                .chatModel(model)
+                .contentRetriever(embeddingRetriever)
+                .build().chat("王麻子是谁");
+        System.out.println("result = " + result);
+    }
 
 
 
