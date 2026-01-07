@@ -1,7 +1,12 @@
 package com.erywim.service;
 
 import dev.langchain4j.data.document.Document;
+import dev.langchain4j.data.document.DocumentParser;
+import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
+import dev.langchain4j.data.document.parser.TextDocumentParser;
+import dev.langchain4j.data.document.splitter.DocumentSplitters;
+import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.segment.TextSegment;
@@ -9,6 +14,7 @@ import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
@@ -19,6 +25,7 @@ import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -142,6 +149,52 @@ public class ChatTest {
                 .contentRetriever(embeddingRetriever)
                 .build().chat("王麻子是谁");
         System.out.println("result = " + result);
+    }
+
+    @Test
+    public void testNaiveRag(){
+        //1. 创建对话模型
+        OpenAiChatModel model = OpenAiChatModel.builder()
+                .baseUrl("https://api.deepseek.com")
+                .apiKey(System.getenv("deepseek-key"))
+                .modelName("deepseek-chat")
+                .build();
+        //2. 创建需要通过RAG检索的文档
+        DocumentParser documentParser = new TextDocumentParser();
+        Document document = FileSystemDocumentLoader.loadDocument("src/main/resources/static/王麻子自传.txt", documentParser);
+
+        //3. 切割document为更小的segment，我们也称其为chunks
+        DocumentSplitter splitter = DocumentSplitters.recursive(300, 0);
+        List<TextSegment> segmentList = splitter.split(document);
+
+        //4. 向量化这些segments
+        OpenAiEmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder()
+                .baseUrl("https://dashscope.aliyuncs.com/compatible-mode/v1")
+                .apiKey(System.getenv("qwen-key"))
+                .modelName("text-embedding-v4")
+                .build();
+        List<Embedding> embeddings = embeddingModel.embedAll(segmentList).content();
+
+        //5. 将向量化的内容放入向量库中
+        InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+        embeddingStore.addAll(embeddings, segmentList);
+
+        //6. 创建内容检索器负责将用户提问的内容从向量库中检索出相关内容
+        // 当前版本能够检索文本chunk，之后可能会支持多模态检索
+        EmbeddingStoreContentRetriever retriever = EmbeddingStoreContentRetriever.builder()
+                .embeddingModel(embeddingModel)
+                .embeddingStore(embeddingStore)
+                .maxResults(2)
+                .minScore(0.5)
+                .build();
+
+        AiServiceChat build = AiServices.builder(AiServiceChat.class)
+                .chatModel(model)
+                .contentRetriever(retriever)
+                .build();
+
+        System.out.println("build.chat= " + build.chat("简要概述王麻子的历程"));
+
     }
 
 
